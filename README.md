@@ -1,3 +1,7 @@
+# usbip-win2
+
+This repo has been de facto superseded by [usbip-win2](https://github.com/vadimgrn/usbip-win2).
+
 # USB/IP for Windows
 
 - This project aims to support both a USB/IP server and a client on Windows platform.
