@@ -84,15 +84,17 @@ usbip.exe list -l
   - `# usbipd -4 -d`
 - Install USB/IP test certificate
   - Install `driver/usbip_test.pfx` (password: usbip)
-  - Certificate should be installed into
-    1. "Trusted Root Certification Authority" in "Local Computer" (not current user) *and*
+  - Certificate should be installed into *both* stores
+    1. "Trusted Root Certification Authority" in "Local Computer" (not current user)
+        - `> certutil -f -p "usbip" -importpfx "Root" "driver\usbip_test.pfx"`
     2. "Trusted Publishers" in "Local Computer" (not current user)
+        - `> certutil -f -p "usbip" -importpfx "TrustedPublisher" "driver\usbip_test.pfx"`
 - Enable test signing
   - `> bcdedit.exe /set TESTSIGNING ON`
   - reboot the system to apply
 - Copy VHCI driver files into a folder in target machine
-  - If you're testing `vhci(ude)`, copy `usbip.exe`, `usbip_vhci_ude.sys`, `usbip_vhci_ude.inf`, `usbip_vhci_ude.cat` into a folder in target machine;
-  - If you're testing `vhci(wdm)`, copy `usbip.exe`, `usbip_vhci.sys`, `usbip_vhci.inf`, `usbip_root.inf`, `usbip_vhci.cat` into a folder in target machine;
+  - If you're testing `vhci(ude)`, copy `usbip.exe`, `usbip_vhci_ude.sys`, `usbip_vhci_ude.inf`, `usbip_vhci_ude.cat`, `attacher.exe` into a folder in target machine;
+  - If you're testing `vhci(wdm)`, copy `usbip.exe`, `usbip_vhci.sys`, `usbip_vhci.inf`, `usbip_root.inf`, `usbip_vhci.cat`, `attacher.exe` into a folder in target machine;
   - You can find all files in output folder after build or on [release](https://github.com/cezanne/usbip-win/releases) page.
 - Install USB/IP VHCI driver
   - You can install using `usbip.exe` or manually
