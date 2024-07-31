@@ -44,6 +44,10 @@ This repo has been de facto superseded by [usbip-win2](https://github.com/vadimg
   - Certificate should be installed into
     1. "Trusted Root Certification Authority" in "Local Computer" (not current user) *and*
     2. "Trusted Publishers" in "Local Computer" (not current user)
+- If *necessary*, disable Memory Integrity (Windows 11) - ***See `Common Issues` below***
+  - From the start menu search for `Core Isolation`
+  - Disable Memory Integrity
+  - Either reboot or wait until enabling test signing
 - Enable test signing
   - `> bcdedit.exe /set TESTSIGNING ON`
   - reboot the system to apply
@@ -87,6 +91,10 @@ usbip.exe list -l
   - Certificate should be installed into
     1. "Trusted Root Certification Authority" in "Local Computer" (not current user) *and*
     2. "Trusted Publishers" in "Local Computer" (not current user)
+- If *necessary*, disable Memory Integrity (Windows 11) - ***See `Common Issues` below***
+  - From the start menu search for `Core Isolation`
+  - Disable Memory Integrity
+  - Either reboot or wait until enabling test signing
 - Enable test signing
   - `> bcdedit.exe /set TESTSIGNING ON`
   - reboot the system to apply
@@ -129,7 +137,11 @@ usbip.exe list -l
   - `PS> usbip.exe uninstall`
 - Disable test signing
   - `> bcdedit.exe /set TESTSIGNING OFF`
-  - reboot the system to apply
+  - Reboot the system to apply
+- Enable Memory Integrity (Windows 11) - ***See `Common Issues` below***
+  - From the start menu search for `Core Isolation`
+  - Enable Memory Integrity
+  - Reboot the system to apply
 
 ### Reporting Bugs
 - `usbip-win` is not yet ready for production use. We could find the problems with detailed logs.
@@ -174,6 +186,37 @@ Windows Registry Editor Version 5.00
 ```
 # dmesg --follow | tee kernel_log.txt
 ```
+
+#### Certificate alternatives
+
+If you are having difficulties getting your certificate to be found by the signing tool it is possible to reference the certificate by it's common name or it's thumbprint, rather than using a local file in the build environment.  Once you have installed the certificate in the instructions outlined earlier, under the project properties for the project in question go to the `Driver Signing` page.  Then, under the certificate's path simply set the path to one of the following:
+
+    Option 1: CN="USBIP Test" | C5F7A75CB6019FCAE821E03D9272F9AF89E7AA5D
+		- This is the best practice
+  
+    Option 2: CN="USBIP Test"
+		- This could find multiple certificates in the store if they share the same common name
+
+    Option 3: C5F7A75CB6019FCAE821E03D9272F9AF89E7AA5D
+		- This is adequate, but makes it difficult for anyone to find the certificate at a later date if needed since they would have to lookup the common name
+
+	NOTE: The provided example values are the CN and thumbprint are from the included `usbip_test.pfx` file
+
+- *Side note: This also eliminates any need to include the certificate in a project's repository or relative file system, which inherently is a fair bit safer in more sensitive projects.*
+
+#### Common Issues
+
+With Windows 11 and the much stricter security requirements you may run into several issues that are not straightforward to diagnose - chief of which is anything related to allowing unsigned or self-signed code to run at all in kernel space.  Fortunately, Microsoft has made things easier where needed - but if you are still new to the world of driver development it is extremely difficult to understand why things are not working correctly.
+
+-  *VHCI driver not loaded error*
+   -  This is either due to not enabling `Test Signing` or, secondarily, due to not disabling `Memory Integrity`.
+-  *Test Signing*
+   -  With Windows 11 `Test Signing` cannot be turned on *after boot* when `SecureBoot` is enabled, which is basically a requirement on modern machines.  To enable test signing in this scenario navigate to `System -> Recovery` and select `Restart Now` under `Advanced Startup`.  This will bring you to the pre-boot menu for windows that will allow you to choose to enable `Test Signing`.  
+      -  **NOTE:** If your drive has `Bitlocker` enabled you *will* be prompted for your bitlocker recovery code before allowed into the advanced startup options pre-boot menu.  To avoid multiple repeated reboots while you quietly mutter your grievances under your breath, I recommend having your recovery code ready.
+-  *Memory Integrity*
+   -  In short, Windows makes decisions on whether to allow your driver code to execute based upon several different factors.  One of these is `Memory Integrity`, which you can read into further detail about [here](https://support.microsoft.com/en-us/windows/core-isolation-e30ed737-17d8-42f3-a2a9-87521df09b78).  Anecdotally speaking, I have ran this project on Windows 11 without issue before disabling Memory Integrity; however, at some point my code would no longer execute for seemingly no reason.  I could not tell you why this change occurred, and I can assure that because reverting all my changes still caused issues.  Once I disabled Memory Integrity I was able to consistently and without fail execute my code on Windows 11.
+      -  **NOTE:** *This is ONLY for testing.  Once in production you should have signed code that memory integrity will not stop from executing.*
+
 
 <hr>
 <sub>This project was supported by Basic Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry of Education(2020R1I1A1A01066121).</sub>
