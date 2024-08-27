@@ -36,11 +36,15 @@ get_speed_from_bcdUSB(USHORT bcdUSB)
 		return USB_SPEED_FULL;
 	case 0x0200:
 		return USB_SPEED_HIGH;
+	case 0x0210:
+		return USB_SPEED_HIGH;
 	case 0x0250:
 		return USB_SPEED_WIRELESS;
 	case 0x0300:
 		return USB_SPEED_SUPER;
 	case 0x0310:
+		return USB_SPEED_SUPER_PLUS;
+	case 0x0320:
 		return USB_SPEED_SUPER_PLUS;
 	default:
 		return USB_SPEED_UNKNOWN;

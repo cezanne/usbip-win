@@ -260,7 +260,13 @@ get_device_speed(pvhci_pluginfo_t pluginfo)
 		return UdecxUsbFullSpeed;
 	case 0x0200:
 		return UdecxUsbHighSpeed;
+	case 0x0210:
+		return UdecxUsbHighSpeed;
 	case 0x0300:
+		return UdecxUsbSuperSpeed;
+	case 0x0310:
+		return UdecxUsbSuperSpeed;
+	case 0x0320:
 		return UdecxUsbSuperSpeed;
 	default:
 		TRE(PLUGIN, "unknown bcdUSB:%x", (ULONG)bcdUSB);
