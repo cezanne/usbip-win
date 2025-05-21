@@ -8,7 +8,9 @@ get_query_empty_resource_requirements(void)
 {
 	PIO_RESOURCE_REQUIREMENTS_LIST	reqs;
 
-	reqs = ExAllocatePoolWithTag(PagedPool, sizeof(IO_RESOURCE_REQUIREMENTS_LIST), USBIP_VHCI_POOL_TAG);
+	//reqs = ExAllocatePoolWithTag(PagedPool, sizeof(IO_RESOURCE_REQUIREMENTS_LIST), USBIP_VHCI_POOL_TAG);
+	reqs = ExAllocatePool2(POOL_FLAG_PAGED, sizeof(IO_RESOURCE_REQUIREMENTS_LIST), USBIP_VHCI_POOL_TAG);
+	
 	if (reqs == NULL) {
 		return NULL;
 	}
@@ -27,7 +29,10 @@ get_query_empty_resources(void)
 {
 	PCM_RESOURCE_LIST	rscs;
 
-	rscs = ExAllocatePoolWithTag(PagedPool, sizeof(CM_RESOURCE_LIST), USBIP_VHCI_POOL_TAG);
+	//rscs = ExAllocatePoolWithTag(PagedPool, sizeof(CM_RESOURCE_LIST), USBIP_VHCI_POOL_TAG);
+	rscs = ExAllocatePool2(POOL_FLAG_PAGED, sizeof(CM_RESOURCE_LIST), USBIP_VHCI_POOL_TAG);
+
+	
 	if (rscs == NULL) {
 		return NULL;
 	}

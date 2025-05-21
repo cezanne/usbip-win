@@ -32,7 +32,10 @@ get_device_prop(PDEVICE_OBJECT pdo, DEVICE_REGISTRY_PROPERTY prop, PULONG plen)
 		DBGE(DBG_GENERAL, "failed to get device property size: %s\n", dbg_ntstatus(status));
 		return NULL;
 	}
-	value = ExAllocatePoolWithTag(PagedPool, buflen, USBIP_VHCI_POOL_TAG);
+	//value = ExAllocatePoolWithTag(PagedPool, buflen, USBIP_VHCI_POOL_TAG);
+	value = ExAllocatePool2(POOL_FLAG_PAGED, buflen, USBIP_VHCI_POOL_TAG);
+
+	
 	if (value == NULL) {
 		DBGE(DBG_GENERAL, "failed to get device property: out of memory\n");
 		return NULL;

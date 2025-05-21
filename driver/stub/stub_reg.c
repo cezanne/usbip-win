@@ -21,7 +21,9 @@ reg_get_property(PDEVICE_OBJECT pdo, int property)
 		return NULL;
 	}
 
-	buf = ExAllocatePoolWithTag(PagedPool, len + sizeof(WCHAR), USBIP_STUB_POOL_TAG);
+	//buf = ExAllocatePoolWithTag(PagedPool, len + sizeof(WCHAR), USBIP_STUB_POOL_TAG);
+	buf = ExAllocatePool2(POOL_FLAG_PAGED, len + sizeof(WCHAR), USBIP_STUB_POOL_TAG);
+	
 	if (buf == NULL) {
 		DBGE(DBG_GENERAL, "reg_get_property: out of memory\n");
 		return NULL;
@@ -45,7 +47,10 @@ reg_get_property(PDEVICE_OBJECT pdo, int property)
 		return NULL;
 	}
 
-	prop = ExAllocatePoolWithTag(PagedPool, prop_ansi.Length + 1, USBIP_STUB_POOL_TAG);
+	//prop = ExAllocatePoolWithTag(PagedPool, prop_ansi.Length + 1, USBIP_STUB_POOL_TAG);
+	prop = ExAllocatePool2(POOL_FLAG_PAGED, prop_ansi.Length + 1, USBIP_STUB_POOL_TAG);
+
+	
 	if (prop == NULL) {
 		DBGE(DBG_GENERAL, "reg_get_property: out of memory\n");
 		RtlFreeAnsiString(&prop_ansi);

@@ -111,7 +111,9 @@ pnp_query_bus_information(PIRP irp)
 
 	PAGED_CODE();
 
-	busInfo = ExAllocatePoolWithTag(PagedPool, sizeof(PNP_BUS_INFORMATION), USBIP_VHCI_POOL_TAG);
+	//busInfo = ExAllocatePoolWithTag(PagedPool, sizeof(PNP_BUS_INFORMATION), USBIP_VHCI_POOL_TAG);
+	busInfo = ExAllocatePool2(POOL_FLAG_PAGED, sizeof(PNP_BUS_INFORMATION), USBIP_VHCI_POOL_TAG);
+	
 
 	if (busInfo == NULL) {
 		return STATUS_INSUFFICIENT_RESOURCES;

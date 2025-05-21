@@ -115,7 +115,9 @@ try_to_cache_descriptor(pvpdo_dev_t vpdo, struct _URB_CONTROL_DESCRIPTOR_REQUEST
 	if (!need_caching_dsc(vpdo, urb_cdr, dsc))
 		return;
 
-	dsc_new = ExAllocatePoolWithTag(PagedPool, urb_cdr->TransferBufferLength, USBIP_VHCI_POOL_TAG);
+	//dsc_new = ExAllocatePoolWithTag(PagedPool, urb_cdr->TransferBufferLength, USBIP_VHCI_POOL_TAG);
+	dsc_new = ExAllocatePool2(POOL_FLAG_PAGED, urb_cdr->TransferBufferLength, USBIP_VHCI_POOL_TAG);
+	
 	if (dsc_new == NULL) {
 		DBGE(DBG_WRITE, "out of memory\n");
 		return;
