@@ -198,6 +198,9 @@
     <Inf>
       <TimeStamp>0.3.0.0</TimeStamp>
     </Inf>
+    <DriverSign>
+      <FileDigestAlgorithm>SHA256</FileDigestAlgorithm>
+    </DriverSign>
   </ItemDefinitionGroup>
   <ItemGroup>
     <FilesToPackage Include="$(TargetPath)" />

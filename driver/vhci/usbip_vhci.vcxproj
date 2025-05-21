@@ -241,6 +241,9 @@
       <Command>gencat.bat $(OutDir) 10_$(DDKPlatform) $(SolutionDir)/driver/usbip_test.pfx
 </Command>
     </PostBuildEvent>
+    <DriverSign>
+      <FileDigestAlgorithm>SHA256</FileDigestAlgorithm>
+    </DriverSign>
   </ItemDefinitionGroup>
   <ItemGroup>
     <FilesToPackage Include="$(TargetPath)" />
