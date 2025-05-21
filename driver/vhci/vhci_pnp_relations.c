@@ -38,7 +38,9 @@ get_bus_relations_1_child(pvdev_t vdev, PDEVICE_RELATIONS *pdev_relations)
 		child_exist = FALSE;
 
 	if (relations == NULL) {
-		relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+		//relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+		relations = (PDEVICE_RELATIONS)ExAllocatePool2(POOL_FLAG_PAGED, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+		
 		if (relations == NULL) {
 			DBGE(DBG_PNP, "no relations will be reported: out of memory\n");
 			return STATUS_INSUFFICIENT_RESOURCES;
@@ -65,7 +67,10 @@ get_bus_relations_1_child(pvdev_t vdev, PDEVICE_RELATIONS *pdev_relations)
 
 	// Need to allocate a new relations structure and add vhub to it
 	size = sizeof(DEVICE_RELATIONS) + relations->Count * sizeof(PDEVICE_OBJECT);
-	relations_new = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, size, USBIP_VHCI_POOL_TAG);
+	//relations_new = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, size, USBIP_VHCI_POOL_TAG);
+	relations_new = (PDEVICE_RELATIONS)ExAllocatePool2(POOL_FLAG_PAGED, size, USBIP_VHCI_POOL_TAG);
+
+	
 	if (relations_new == NULL) {
 		DBGE(DBG_VHUB, "old relations will be used: out of memory\n");
 		return STATUS_INSUFFICIENT_RESOURCES;
@@ -124,7 +129,10 @@ get_bus_relations_vhub(pvhub_dev_t vhub, PDEVICE_RELATIONS *pdev_relations)
 	// Need to allocate a new relations structure and add our vpdos to it
 	length = sizeof(DEVICE_RELATIONS) + (vhub->n_vpdos_plugged + n_olds - 1) * sizeof(PDEVICE_OBJECT);
 
-	relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, length, USBIP_VHCI_POOL_TAG);
+	//relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, length, USBIP_VHCI_POOL_TAG);
+	relations = (PDEVICE_RELATIONS)ExAllocatePool2(POOL_FLAG_PAGED, length, USBIP_VHCI_POOL_TAG);
+
+	
 	if (relations == NULL) {
 		DBGE(DBG_VHUB, "failed to allocate a new relation: out of memory\n");
 
@@ -175,7 +183,10 @@ get_self_dev_relation(pvdev_t vdev)
 {
 	PDEVICE_RELATIONS	dev_relations;
 
-	dev_relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+	//dev_relations = (PDEVICE_RELATIONS)ExAllocatePoolWithTag(PagedPool, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+	dev_relations = (PDEVICE_RELATIONS)ExAllocatePool2(POOL_FLAG_PAGED, sizeof(DEVICE_RELATIONS), USBIP_VHCI_POOL_TAG);
+
+	
 	if (dev_relations == NULL)
 		return NULL;
 

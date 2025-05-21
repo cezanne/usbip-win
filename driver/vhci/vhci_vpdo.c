@@ -21,7 +21,9 @@ vpdo_select_config(pvpdo_dev_t vpdo, struct _URB_SELECT_CONFIGURATION *urb_selc)
 	}
 
 	if (vpdo->dsc_conf == NULL || vpdo->dsc_conf->wTotalLength != dsc_conf->wTotalLength) {
-		dsc_conf_new = ExAllocatePoolWithTag(NonPagedPool, dsc_conf->wTotalLength, USBIP_VHCI_POOL_TAG);
+		//dsc_conf_new = ExAllocatePoolWithTag(NonPagedPool, dsc_conf->wTotalLength, USBIP_VHCI_POOL_TAG);
+		dsc_conf_new = ExAllocatePool2(POOL_FLAG_NON_PAGED, dsc_conf->wTotalLength, USBIP_VHCI_POOL_TAG);
+		
 		if (dsc_conf_new == NULL) {
 			DBGE(DBG_WRITE, "failed to allocate configuration descriptor: out of memory\n");
 			return STATUS_UNSUCCESSFUL;

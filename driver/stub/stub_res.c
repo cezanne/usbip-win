@@ -40,7 +40,9 @@ create_stub_res(unsigned int cmd, unsigned long seqnum, int err, PVOID data, int
 {
 	stub_res_t	*sres;
 
-	sres = ExAllocatePoolWithTag(NonPagedPool, sizeof(stub_res_t), USBIP_STUB_POOL_TAG);
+	//sres = ExAllocatePoolWithTag(NonPagedPool, sizeof(stub_res_t), USBIP_STUB_POOL_TAG);
+	sres = ExAllocatePool2(POOL_FLAG_NON_PAGED, sizeof(stub_res_t), USBIP_STUB_POOL_TAG);
+	
 	if (sres == NULL) {
 		DBGE(DBG_GENERAL, "create_stub_res: out of memory\n");
 		if (data != NULL && !need_copy)
@@ -50,7 +52,9 @@ create_stub_res(unsigned int cmd, unsigned long seqnum, int err, PVOID data, int
 	if (data != NULL && need_copy) {
 		PVOID	data_copied;
 
-		data_copied = ExAllocatePoolWithTag(NonPagedPool, data_len, USBIP_STUB_POOL_TAG);
+		//data_copied = ExAllocatePoolWithTag(NonPagedPool, data_len, USBIP_STUB_POOL_TAG);
+		data_copied = ExAllocatePool2(POOL_FLAG_NON_PAGED, data_len, USBIP_STUB_POOL_TAG);
+
 		if (data_copied == NULL) {
 			DBGE(DBG_GENERAL, "create_stub_res: out of memory. drop data.\n");
 			data_len = 0;

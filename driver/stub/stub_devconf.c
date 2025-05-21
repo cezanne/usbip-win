@@ -44,7 +44,9 @@ dup_info_intf(PUSBD_INTERFACE_INFORMATION info_intf)
 	PUSBD_INTERFACE_INFORMATION	info_intf_copied;
 	int	size_info = INFO_INTF_SIZE(info_intf);
 
-	info_intf_copied = ExAllocatePoolWithTag(NonPagedPool, size_info, USBIP_STUB_POOL_TAG);
+	//info_intf_copied = ExAllocatePoolWithTag(NonPagedPool, size_info, USBIP_STUB_POOL_TAG);
+	info_intf_copied = ExAllocatePool2(POOL_FLAG_NON_PAGED, size_info, USBIP_STUB_POOL_TAG);
+	
 	if (info_intf_copied == NULL) {
 		DBGE(DBG_GENERAL, "dup_info_intf: out of memory\n");
 		return NULL;
@@ -76,13 +78,19 @@ create_devconf(PUSB_CONFIGURATION_DESCRIPTOR dsc_conf, USBD_CONFIGURATION_HANDLE
 	int	size_devconf;
 
 	size_devconf = sizeof(devconf_t) - sizeof(PUSBD_INTERFACE_INFORMATION) + dsc_conf->bNumInterfaces * sizeof(PUSBD_INTERFACE_INFORMATION);
-	devconf = (devconf_t *)ExAllocatePoolWithTag(NonPagedPool, size_devconf, USBIP_STUB_POOL_TAG);
+	//devconf = (devconf_t *)ExAllocatePoolWithTag(NonPagedPool, size_devconf, USBIP_STUB_POOL_TAG);
+	devconf = (devconf_t*)ExAllocatePool2(POOL_FLAG_NON_PAGED, size_devconf, USBIP_STUB_POOL_TAG);
+
+	
 	if (devconf == NULL) {
 		DBGE(DBG_GENERAL, "create_devconf: out of memory\n");
 		return NULL;
 	}
 
-	devconf->dsc_conf = ExAllocatePoolWithTag(NonPagedPool, dsc_conf->wTotalLength, USBIP_STUB_POOL_TAG);
+	//devconf->dsc_conf = ExAllocatePoolWithTag(NonPagedPool, dsc_conf->wTotalLength, USBIP_STUB_POOL_TAG);
+	devconf->dsc_conf = ExAllocatePool2(POOL_FLAG_NON_PAGED, dsc_conf->wTotalLength, USBIP_STUB_POOL_TAG);
+
+	
 	if (devconf->dsc_conf == NULL) {
 		DBGE(DBG_GENERAL, "create_devconf: out of memory\n");
 		ExFreePoolWithTag(devconf, USBIP_STUB_POOL_TAG);

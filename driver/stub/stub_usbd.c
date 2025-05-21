@@ -67,7 +67,9 @@ call_usbd_nb(usbip_stub_dev_t *devstub, PURB purb, cb_urb_done_t cb_urb_done, st
 
 	DBGI(DBG_GENERAL, "call_usbd_nb: enter\n");
 
-	safe_completion = (safe_completion_t *)ExAllocatePoolWithTag(NonPagedPool, sizeof(safe_completion_t), USBIP_STUB_POOL_TAG);
+	//safe_completion = (safe_completion_t *)ExAllocatePoolWithTag(NonPagedPool, sizeof(safe_completion_t), USBIP_STUB_POOL_TAG);
+	safe_completion = (safe_completion_t*)ExAllocatePool2(POOL_FLAG_NON_PAGED, sizeof(safe_completion_t), USBIP_STUB_POOL_TAG);
+	
 	if (safe_completion == NULL) {
 		DBGE(DBG_GENERAL, "call_usbd_nb: out of memory: cannot allocate safe_completion\n");
 		return STATUS_NO_MEMORY;
@@ -206,7 +208,10 @@ get_usb_dsc_conf(usbip_stub_dev_t *devstub, UCHAR bVal)
 	if (iConfiguration == -1)
 		return NULL;
 
-	dsc_conf = ExAllocatePoolWithTag(NonPagedPool, ConfDesc.wTotalLength, USBIP_STUB_POOL_TAG);
+	//dsc_conf = ExAllocatePoolWithTag(NonPagedPool, ConfDesc.wTotalLength, USBIP_STUB_POOL_TAG);
+	dsc_conf = ExAllocatePool2(POOL_FLAG_NON_PAGED, ConfDesc.wTotalLength, USBIP_STUB_POOL_TAG);
+
+	
 	if (dsc_conf == NULL)
 		return NULL;
 
@@ -226,7 +231,9 @@ build_default_intf_list(PUSB_CONFIGURATION_DESCRIPTOR dsc_conf)
 	unsigned	i;
 
 	size = sizeof(USBD_INTERFACE_LIST_ENTRY) * (dsc_conf->bNumInterfaces + 1);
-	pintf_list = ExAllocatePoolWithTag(NonPagedPool, size, USBIP_STUB_POOL_TAG);
+	//pintf_list = ExAllocatePoolWithTag(NonPagedPool, size, USBIP_STUB_POOL_TAG);
+	pintf_list = ExAllocatePool2(POOL_FLAG_NON_PAGED, size, USBIP_STUB_POOL_TAG);
+	
 	if (pintf_list == NULL)
 		return NULL;
 
@@ -320,7 +327,10 @@ select_usb_intf(usbip_stub_dev_t *devstub, UCHAR intf_num, USHORT alt_setting)
 	}
 
 	len_urb = sizeof(struct _URB_SELECT_INTERFACE) - sizeof(USBD_INTERFACE_INFORMATION) + info_intf_size;
-	purb = (PURB)ExAllocatePoolWithTag(NonPagedPool, len_urb, USBIP_STUB_POOL_TAG);
+	//purb = (PURB)ExAllocatePoolWithTag(NonPagedPool, len_urb, USBIP_STUB_POOL_TAG);
+	purb = (PURB)ExAllocatePool2(POOL_FLAG_NON_PAGED, len_urb, USBIP_STUB_POOL_TAG);
+
+	
 	if (purb == NULL) {
 		DBGE(DBG_GENERAL, "select_usb_intf: out of memory\n");
 		return FALSE;
@@ -440,7 +450,10 @@ submit_bulk_intr_transfer(usbip_stub_dev_t *devstub, USBD_PIPE_HANDLE hPipe, uns
 	ULONG		flags = USBD_SHORT_TRANSFER_OK;
 	stub_res_t	*sres;
 
-	purb = ExAllocatePoolWithTag(NonPagedPool, sizeof(struct _URB_BULK_OR_INTERRUPT_TRANSFER), USBIP_STUB_POOL_TAG);
+	//purb = ExAllocatePoolWithTag(NonPagedPool, sizeof(struct _URB_BULK_OR_INTERRUPT_TRANSFER), USBIP_STUB_POOL_TAG);
+	purb = ExAllocatePool2(POOL_FLAG_NON_PAGED, sizeof(struct _URB_BULK_OR_INTERRUPT_TRANSFER), USBIP_STUB_POOL_TAG);
+
+	
 	if (purb == NULL) {
 		DBGE(DBG_GENERAL, "submit_bulk_intr_transfer: out of memory: urb\n");
 		return STATUS_NO_MEMORY;
@@ -504,7 +517,10 @@ done_iso_transfer(usbip_stub_dev_t *devstub, NTSTATUS status, PURB purb, stub_re
 				}
 			}
 			else {
-				sres->data = ExAllocatePoolWithTag(NonPagedPool, (SIZE_T)sres->data_len, USBIP_STUB_POOL_TAG);
+				//sres->data = ExAllocatePoolWithTag(NonPagedPool, (SIZE_T)sres->data_len, USBIP_STUB_POOL_TAG);
+				sres->data = ExAllocatePool2(POOL_FLAG_NON_PAGED, (SIZE_T)sres->data_len, USBIP_STUB_POOL_TAG);
+
+				
 				if (sres->data == NULL) {
 					DBGE(DBG_GENERAL, "done_iso_transfer: out of memory\n");
 					sres->data_len = 0;

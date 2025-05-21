@@ -1,3 +1,7 @@
+#ifndef WINDOWS_DEF_H
+	#define WINDOWS_DEF_H 1
+	//#include <windows.h>
+#endif
 #include <ntddk.h>
 
 #include <ntstrsafe.h>
@@ -32,7 +36,9 @@ libdrv_strdupW(LPCWSTR cwstr)
 	status = RtlStringCchLengthW(cwstr, NTSTRSAFE_MAX_CCH, &len);
 	if (NT_ERROR(status))
 		return NULL;
-	wstr_duped = ExAllocatePoolWithTag(PagedPool, (len + 1) * sizeof(WCHAR), libdrv_pooltag);
+	//wstr_duped = ExAllocatePoolWithTag(PagedPool, (len + 1) * sizeof(WCHAR), libdrv_pooltag);
+	wstr_duped = ExAllocatePool2(POOL_FLAG_PAGED, (len + 1) * sizeof(WCHAR), libdrv_pooltag);
+
 	if (wstr_duped == NULL)
 		return NULL;
 

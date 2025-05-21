@@ -66,7 +66,9 @@ setup_device_id(pvdev_t vdev, PIRP irp)
 	}
 
 	id_size = vdev_devid_size[vdev->type];
-	id_dev = ExAllocatePoolWithTag(PagedPool, id_size, USBIP_VHCI_POOL_TAG);
+	//id_dev = ExAllocatePoolWithTag(PagedPool, id_size, USBIP_VHCI_POOL_TAG);
+	id_dev = ExAllocatePool2(POOL_FLAG_PAGED, id_size, USBIP_VHCI_POOL_TAG);
+	
 	if (id_dev == NULL) {
 		DBGE(DBG_PNP, "%s: query device id: out of memory\n", dbg_vdev_type(vdev->type));
 		return STATUS_INSUFFICIENT_RESOURCES;
@@ -99,7 +101,10 @@ setup_hw_ids(pvdev_t vdev, PIRP irp)
 	}
 
 	ids_size = vdev_hwids_size[vdev->type];
-	ids_hw = ExAllocatePoolWithTag(PagedPool, ids_size, USBIP_VHCI_POOL_TAG);
+	//ids_hw = ExAllocatePoolWithTag(PagedPool, ids_size, USBIP_VHCI_POOL_TAG);
+	ids_hw = ExAllocatePool2(POOL_FLAG_PAGED, ids_size, USBIP_VHCI_POOL_TAG);
+
+	
 	if (ids_hw == NULL) {
 		DBGE(DBG_PNP, "%s: query hw ids: out of memory\n", dbg_vdev_type(vdev->type));
 		return STATUS_INSUFFICIENT_RESOURCES;
@@ -141,7 +146,10 @@ setup_inst_id_or_serial(pvdev_t vdev, PIRP irp, BOOLEAN serial)
 
 	vpdo = (pvpdo_dev_t)vdev;
 
-	id_inst = ExAllocatePoolWithTag(PagedPool, (MAX_VHCI_SERIAL_ID + 1) * sizeof(wchar_t), USBIP_VHCI_POOL_TAG);
+	//id_inst = ExAllocatePoolWithTag(PagedPool, (MAX_VHCI_SERIAL_ID + 1) * sizeof(wchar_t), USBIP_VHCI_POOL_TAG);
+	id_inst = ExAllocatePool2(POOL_FLAG_PAGED, (MAX_VHCI_SERIAL_ID + 1) * sizeof(wchar_t), USBIP_VHCI_POOL_TAG);
+
+	
 	if (id_inst == NULL) {
 		DBGE(DBG_PNP, "vpdo: query instance id or serial: out of memory\n");
 		return STATUS_INSUFFICIENT_RESOURCES;
@@ -195,7 +203,10 @@ setup_compat_ids(pvdev_t vdev, PIRP irp)
 
 	vpdo = (pvpdo_dev_t)vdev;
 
-	ids_compat = ExAllocatePoolWithTag(PagedPool, ids_size, USBIP_VHCI_POOL_TAG);
+	//ids_compat = ExAllocatePoolWithTag(PagedPool, ids_size, USBIP_VHCI_POOL_TAG);
+	ids_compat = ExAllocatePool2(POOL_FLAG_PAGED, ids_size, USBIP_VHCI_POOL_TAG);
+
+	
 	if (ids_compat == NULL) {
 		DBGE(DBG_PNP, "vpdo: query compatible id: out of memory\n");
 		return STATUS_INSUFFICIENT_RESOURCES;

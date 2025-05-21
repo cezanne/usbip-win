@@ -110,7 +110,9 @@ fetch_done_urbr_control_transfer_ex(pctx_vusb_t vusb, struct _URB_CONTROL_TRANSF
 	NTSTATUS	status;
 
 	len = libdrv_strlenW(vusb->wserial) * sizeof(WCHAR) + 2;
-	dsc_serial = ExAllocatePoolWithTag(PagedPool, len, VHCI_POOLTAG);
+	//dsc_serial = ExAllocatePoolWithTag(PagedPool, len, VHCI_POOLTAG);
+	dsc_serial = ExAllocatePool2(POOL_FLAG_PAGED, len, VHCI_POOLTAG);
+	
 	*(PUCHAR)dsc_serial = (UCHAR)len;
 	((PUCHAR)dsc_serial)[1] = 0x03;
 	RtlCopyMemory((PUCHAR)dsc_serial + 2, vusb->wserial, len - 2);
